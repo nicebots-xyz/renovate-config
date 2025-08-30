@@ -203,14 +203,18 @@
 	"labels": ["dependencies"],
 	"semanticCommits": "enabled",
 	"commitMessageAction": "Upgrade",
+	"commitMessagePrefix": "⬆️",
+	"labels": ["deps"],
 	"packageRules": [
 		{
 			"matchUpdateTypes": ["pin"],
+			"commitMessagePrefix": "📌",
 			"commitMessageAction": "Pin"
 		},
 		{
 			"matchUpdateTypes": ["rollback"],
-			"commitMessageAction": "Downgrade"
+			"commitMessageAction": "Downgrade",
+			"commitMessagePrefix": "⬇️"
 		},
 		{
 			"matchUpdateTypes": ["lockFileMaintenance"],
@@ -225,6 +229,10 @@
 			"matchDatasources": ["github-tags","github-releases"],
 			"automerge": true
 		},
+		{
+      		"matchDatasources": ["pypi"],
+      		"addLabels": ["pypi"]
+    	}
 	],
 	"docker-compose": {
 		"major": {
