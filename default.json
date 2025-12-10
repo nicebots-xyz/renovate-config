@@ -225,11 +225,6 @@
 			"addLabels": ["optional"]
 		},
 		{
-			"groupName": "GitHub Packages",
-			"matchDatasources": ["github-tags","github-releases"],
-			"automerge": true
-		},
-		{
       		"matchDatasources": ["pypi"],
       		"addLabels": ["pypi"]
     	}
