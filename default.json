@@ -203,18 +203,15 @@
 	"labels": ["dependencies"],
 	"semanticCommits": "enabled",
 	"commitMessageAction": "Upgrade",
-	"commitMessagePrefix": "⬆️",
 	"labels": ["deps"],
 	"packageRules": [
 		{
 			"matchUpdateTypes": ["pin"],
-			"commitMessagePrefix": "📌",
 			"commitMessageAction": "Pin"
 		},
 		{
 			"matchUpdateTypes": ["rollback"],
 			"commitMessageAction": "Downgrade",
-			"commitMessagePrefix": "⬇️"
 		},
 		{
 			"matchUpdateTypes": ["lockFileMaintenance"],
@@ -229,6 +226,7 @@
       		"addLabels": ["pypi"]
     	}
 	],
+	"pinDigests": true,
 	"docker-compose": {
 		"major": {
 			"enabled": true
@@ -244,5 +242,5 @@
 		"minor": {
 			"enabled": true
 		}
-	}
+	},
 }
