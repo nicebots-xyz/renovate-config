@@ -19,7 +19,7 @@ Shared [Renovate](https://docs.renovatebot.com/) presets for nicebots-xyz reposi
 
 | Preset | What it does |
 | --- | --- |
-| `local>nicebots-xyz/renovate-config` | `config:recommended` (dependency dashboard, `fix(deps)`/`chore(deps)` semantic commits, monorepo grouping), pinned digests, lock file maintenance and labels |
+| `local>nicebots-xyz/renovate-config` | `config:recommended` (dependency dashboard, `fix(deps)`/`chore(deps)` semantic commits, monorepo grouping), pinned digests, lock file maintenance, a 7-day minimum release age for npm and labels |
 | `local>nicebots-xyz/renovate-config:automerge-python-lockfile` | Opt-in. Automerges lock file maintenance of Python package managers once every status check is green |
 
 ### Labels
@@ -28,6 +28,13 @@ Every PR gets `deps`, plus:
 
 - `deps:python`, `deps:javascript`, `deps:github-actions`, `deps:docker`, `deps:optional` for the ecosystem
 - `update:major`, `update:minor`, `update:patch`, `update:digest`, `update:pin`, `update:lockfile` for the kind of update
+
+### Minimum release age
+
+npm releases must be 7 days old before Renovate proposes them (`minimumReleaseAge` with
+`internalChecksFilter: "strict"`, so no branch exists until then). This mirrors Renovate's own
+`security:minimumReleaseAgeNpm` preset with a longer delay. As with Python, lock file maintenance isn't covered,
+so pair it with the package manager's own cooldown where it has one.
 
 ### Automerge
 

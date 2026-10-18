@@ -40,6 +40,14 @@
       "commitMessageAction": "Update lock file"
     },
     {
+      "description": "Wait 7 days before proposing an npm release, so malware scanners can flag it and a pulled release never lands. strict: no branch is created until the age is met.",
+      "matchDatasources": [
+        "npm"
+      ],
+      "minimumReleaseAge": "7 days",
+      "internalChecksFilter": "strict"
+    },
+    {
       "description": "Label the ecosystem an update belongs to.",
       "matchDatasources": [
         "pypi"
