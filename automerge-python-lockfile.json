@@ -1,0 +1,21 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Opt-in: automerge lock file maintenance of Python package managers once every status check is green. Extend it with `local>nicebots-xyz/renovate-config:automerge-python-lockfile`. Pair it with a package manager cooldown (e.g. PDM `[tool.pdm.resolution] exclude-newer`), as Renovate cannot apply `minimumReleaseAge` to lock file maintenance.",
+  "packageRules": [
+    {
+      "matchUpdateTypes": [
+        "lockFileMaintenance"
+      ],
+      "matchManagers": [
+        "pep621",
+        "poetry",
+        "pipenv",
+        "pip-compile"
+      ],
+      "automerge": true,
+      "automergeType": "pr",
+      "platformAutomerge": false,
+      "ignoreTests": false
+    }
+  ]
+}
