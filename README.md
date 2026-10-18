@@ -35,9 +35,10 @@ Every PR gets `deps`, plus:
 status check on the branch has passed. It doesn't rely on GitHub auto-merge, which only waits for the checks that
 branch protection marks as required.
 
-Commits pushed by [autofix.ci](https://autofix.ci) (e.g. reformatting after a formatter bump) are listed in
-`gitIgnoredAuthors`, so Renovate still treats the branch as its own: it keeps updating it and can still
-automerge it. When Renovate rebases, it drops the autofix commit and autofix.ci applies it again.
+Commits pushed by [autofix.ci](https://autofix.ci) or by [nicebots-xyz/fixer](https://github.com/nicebots-xyz/fixer)
+(the NiceBots Autofixer app), e.g. reformatting after a formatter bump, are listed in `gitIgnoredAuthors`. Renovate
+still treats the branch as its own: it keeps updating it and can still automerge it. When Renovate rebases, it drops
+the fix commit and the fixer applies it again.
 
 Renovate can't apply `minimumReleaseAge` to lock file maintenance, so set a cooldown in the package manager too,
 e.g. for PDM:

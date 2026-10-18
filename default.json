@@ -9,7 +9,8 @@
   "assigneesFromCodeOwners": true,
   "pinDigests": true,
   "gitIgnoredAuthors": [
-    "114827586+autofix-ci[bot]@users.noreply.github.com"
+    "114827586+autofix-ci[bot]@users.noreply.github.com",
+    "/^\\d+\\+nicebots-autofixer\\[bot\\]@users\\.noreply\\.github\\.com$/"
   ],
   "lockFileMaintenance": {
     "enabled": true
