@@ -8,6 +8,9 @@
   "commitMessageAction": "Upgrade",
   "assigneesFromCodeOwners": true,
   "pinDigests": true,
+  "gitIgnoredAuthors": [
+    "114827586+autofix-ci[bot]@users.noreply.github.com"
+  ],
   "lockFileMaintenance": {
     "enabled": true
   },
