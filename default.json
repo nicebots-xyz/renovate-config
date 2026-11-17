@@ -96,15 +96,6 @@
       "internalChecksFilter": "strict"
     },
     {
-      "description": "Upgrade the setup-licensor action and the licensor release it installs (annotated `# renovate: datasource=github-releases depName=nicebots-xyz/licensor`) together, so they never drift apart.",
-      "matchPackageNames": [
-        "nicebots-xyz/licensor"
-      ],
-      "groupName": "licensor",
-      "groupSlug": "licensor",
-      "commitMessageTopic": "licensor"
-    },
-    {
       "description": "Python interpreter upgrades (requires-python, Docker image) need manual work around them and Renovate cannot regenerate a PDM lock file for one, so they wait on the dependency dashboard until approved.",
       "matchDatasources": [
         "python-version",
@@ -208,19 +199,6 @@
       ],
       "addLabels": [
         "update:lockfile"
-      ]
-    }
-  ],
-  "customManagers": [
-    {
-      "customType": "regex",
-      "description": "Versions annotated with a `# renovate: datasource=… depName=…` comment on the line above, e.g. the licensor release that setup-licensor installs.",
-      "managerFilePatterns": [
-        "/(^|/)(workflow-templates|\\.(?:github|gitea|forgejo)/(?:workflows|actions))/.+\\.ya?ml$/",
-        "/(^|/)action\\.ya?ml$/"
-      ],
-      "matchStrings": [
-        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)(?: packageName=(?<packageName>\\S+))?(?: versioning=(?<versioning>\\S+))?\\n\\s+[\\w-]+: [\"']?(?<currentValue>[^\\s\"']+)[\"']?"
       ]
     }
   ]

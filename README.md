@@ -77,20 +77,6 @@ Upgrading the interpreter (`requires-python`, the `python` Docker image) needs w
 `PYTHON_VERSION`, the type checker's target, a new lock file that Renovate cannot generate for PDM. These updates wait
 on the dependency dashboard until someone ticks them. Patch releases and digest refreshes of the image are not held.
 
-### Annotated versions
-
-A version in a workflow or action file that no manager knows about is tracked with a comment on the line above it:
-
-```yaml
-- uses: nicebots-xyz/licensor/.github/actions/setup-licensor@<digest> # v0.1.2
-  with:
-    # renovate: datasource=github-releases depName=nicebots-xyz/licensor
-    version: v0.1.2
-```
-
-`packageName=` and `versioning=` can follow `depName=`. The setup-licensor action and the licensor release it installs
-are grouped, so they always move together.
-
 ### Automerge
 
 `platformAutomerge` is off everywhere, so Renovate merges a pull request itself only once every status check on the
