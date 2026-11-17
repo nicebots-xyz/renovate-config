@@ -1,0 +1,32 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Opt-in: automerge low-risk updates once every status check is green. Extend it with `local>nicebots-xyz/renovate-config:automerge-low-risk` in repositories whose checks are trusted to catch a broken update.",
+  "packageRules": [
+    {
+      "description": "Patches, digest refreshes and digest pins.",
+      "matchUpdateTypes": [
+        "patch",
+        "digest",
+        "pinDigest"
+      ],
+      "automerge": true
+    },
+    {
+      "description": "Minor GitHub Actions updates.",
+      "matchManagers": [
+        "github-actions"
+      ],
+      "matchUpdateTypes": [
+        "minor"
+      ],
+      "automerge": true
+    },
+    {
+      "description": "Tegami is young and release tooling builds on its barely documented plugin API: always reviewed.",
+      "matchPackageNames": [
+        "tegami"
+      ],
+      "automerge": false
+    }
+  ]
+}
