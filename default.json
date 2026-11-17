@@ -8,12 +8,16 @@
   "commitMessageAction": "Upgrade",
   "assigneesFromCodeOwners": true,
   "pinDigests": true,
+  "platformAutomerge": false,
   "gitIgnoredAuthors": [
     "114827586+autofix-ci[bot]@users.noreply.github.com",
     "/^\\d+\\+nicebots-autofixer\\[bot\\]@users\\.noreply\\.github\\.com$/"
   ],
   "lockFileMaintenance": {
     "enabled": true
+  },
+  "group": {
+    "commitMessageTopic": "{{{groupName}}}{{#with (distinct (lookupArray upgrades \"depName\")) as |names|}}{{#if names.[1]}} ({{#each names}}{{#if (or (equals @index 0) (equals @index 1) (equals @index 2) (equals @index 3) (equals @index 4) (equals @index 5))}}{{#if @index}}, {{/if}}{{{this}}}{{/if}}{{/each}}{{#if names.[6]}} and {{add names.length -6}} more{{/if}}){{/if}}{{/with}}"
   },
   "labels": [
     "deps"
@@ -34,10 +38,36 @@
       "commitMessageAction": "Downgrade"
     },
     {
+      "description": "Maintain the lock files of each package manager in their own pull request, so one failing to update never holds back another.",
       "matchUpdateTypes": [
         "lockFileMaintenance"
       ],
-      "commitMessageAction": "Update lock file"
+      "branchTopic": "lock-file-maintenance-{{{manager}}}",
+      "commitMessageAction": "Update",
+      "commitMessageTopic": "{{{manager}}} lock file"
+    },
+    {
+      "description": "Name lock file maintenance pull requests after their ecosystem.",
+      "matchUpdateTypes": [
+        "lockFileMaintenance"
+      ],
+      "matchManagers": [
+        "pep621",
+        "poetry",
+        "pipenv",
+        "pip-compile"
+      ],
+      "commitMessageTopic": "Python lock file"
+    },
+    {
+      "matchUpdateTypes": [
+        "lockFileMaintenance"
+      ],
+      "matchManagers": [
+        "npm",
+        "bun"
+      ],
+      "commitMessageTopic": "JavaScript lock file"
     },
     {
       "description": "Wait 7 days before proposing an npm release, so malware scanners can flag it and a pulled release never lands. strict: no branch is created until the age is met.",
@@ -46,6 +76,39 @@
       ],
       "minimumReleaseAge": "7 days",
       "internalChecksFilter": "strict"
+    },
+    {
+      "description": "Wait 7 days before proposing a PyPI release. Pair it with the same cooldown in the package manager (PDM `exclude-newer`, uv `--exclude-newer`), so Renovate never proposes a release the lock file refuses.",
+      "matchDatasources": [
+        "pypi"
+      ],
+      "minimumReleaseAge": "7 days",
+      "internalChecksFilter": "strict"
+    },
+    {
+      "description": "Wait 5 days before proposing an image or a GitHub release (actions included), wherever the source gives release timestamps. A source without them never passes: turn the cooldown off for it in the repository.",
+      "matchDatasources": [
+        "docker",
+        "github-releases",
+        "github-tags"
+      ],
+      "minimumReleaseAge": "5 days",
+      "internalChecksFilter": "strict"
+    },
+    {
+      "description": "Python interpreter upgrades (requires-python, Docker image) need manual work around them and Renovate cannot regenerate a PDM lock file for one, so they wait on the dependency dashboard until approved.",
+      "matchDatasources": [
+        "python-version",
+        "docker"
+      ],
+      "matchPackageNames": [
+        "/^(docker\\.io/)?(library/)?python$/"
+      ],
+      "matchUpdateTypes": [
+        "major",
+        "minor"
+      ],
+      "dependencyDashboardApproval": true
     },
     {
       "description": "Label the ecosystem an update belongs to.",

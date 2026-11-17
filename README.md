@@ -19,8 +19,12 @@ Shared [Renovate](https://docs.renovatebot.com/) presets for nicebots-xyz reposi
 
 | Preset | What it does |
 | --- | --- |
-| `local>nicebots-xyz/renovate-config` | `config:recommended` (dependency dashboard, `fix(deps)`/`chore(deps)` semantic commits, monorepo grouping), pinned digests, lock file maintenance, a 7-day minimum release age for npm and labels |
+| `local>nicebots-xyz/renovate-config` | `config:recommended` (dependency dashboard, `fix(deps)`/`chore(deps)` semantic commits, monorepo grouping), pinned digests, cooldowns, lock file maintenance, explicit titles and labels |
 | `local>nicebots-xyz/renovate-config:automerge-python-lockfile` | Opt-in. Automerges lock file maintenance of Python package managers once every status check is green |
+| `local>nicebots-xyz/renovate-config:automerge-low-risk` | Opt-in. Automerges patches, digest updates and minor GitHub Actions updates once every status check is green, Tegami excepted |
+
+Repository configs only hold what is specific to the repository: its own files, packages and sources. A rule that
+would make sense in every repository belongs here.
 
 ### Labels
 
@@ -31,26 +35,58 @@ Every PR gets `deps`, plus:
 
 ### Minimum release age
 
-npm releases must be 7 days old before Renovate proposes them (`minimumReleaseAge` with
-`internalChecksFilter: "strict"`, so no branch exists until then). This mirrors Renovate's own
-`security:minimumReleaseAgeNpm` preset with a longer delay. As with Python, lock file maintenance isn't covered,
-so pair it with the package manager's own cooldown where it has one.
+Renovate waits before proposing a release, so malware scanners can flag it and a pulled release never lands.
+`internalChecksFilter: "strict"` means no branch exists until then.
 
-### Automerge
+| Source | Wait |
+| --- | --- |
+| npm | 7 days |
+| PyPI | 7 days |
+| Docker images, GitHub releases and tags (actions included) | 5 days |
 
-`automerge-python-lockfile` sets `platformAutomerge: false`, so Renovate merges the PR itself only once every
-status check on the branch has passed. It doesn't rely on GitHub auto-merge, which only waits for the checks that
-branch protection marks as required.
-
-Commits pushed by [autofix.ci](https://autofix.ci) or by [nicebots-xyz/fixer](https://github.com/nicebots-xyz/fixer)
-(the NiceBots Autofixer app), e.g. reformatting after a formatter bump, are listed in `gitIgnoredAuthors`. Renovate
-still treats the branch as its own: it keeps updating it and can still automerge it. When Renovate rebases, it drops
-the fix commit and the fixer applies it again.
-
-Renovate can't apply `minimumReleaseAge` to lock file maintenance, so set a cooldown in the package manager too,
-e.g. for PDM:
+Lock file maintenance isn't covered, so pair it with the package manager's own cooldown where it has one, with the
+same 7 days for PyPI so Renovate never proposes a release the lock file refuses:
 
 ```toml
 [tool.pdm.resolution]
 exclude-newer = "7d"
 ```
+
+A source without release timestamps never passes the wait. Turn it off for that source in the repository
+(`"minimumReleaseAge": null`), or track the dependency through a source that has timestamps.
+
+### Grouped updates
+
+Grouped pull requests name their packages: `upgrade python dependencies (aiohttp, py-cord, pydantic)`, up to six
+names and then `and N more`. A group that ends up with a single update keeps the usual title of that update.
+
+### Lock file maintenance
+
+Each package manager gets its own pull request (`renovate/lock-file-maintenance-<manager>`), so one lock file failing
+to update never holds back another:
+
+| Title | Managers |
+| --- | --- |
+| `update python lock file` | `pep621` (PDM, uv), `poetry`, `pipenv`, `pip-compile` |
+| `update javascript lock file` | `npm` (npm, pnpm, Yarn), `bun` |
+| `update <manager> lock file` | Every other manager |
+
+### Python interpreter
+
+Upgrading the interpreter (`requires-python`, the `python` Docker image) needs work around it: the Docker
+`PYTHON_VERSION`, the type checker's target, a new lock file that Renovate cannot generate for PDM. These updates wait
+on the dependency dashboard until someone ticks them. Patch releases and digest refreshes of the image are not held.
+
+### Automerge
+
+`platformAutomerge` is off everywhere, so Renovate merges a pull request itself only once every status check on the
+branch has passed. It doesn't rely on GitHub auto-merge, which only waits for the checks that branch protection marks
+as required.
+
+Automerging is opt-in per repository, through `automerge-python-lockfile` and `automerge-low-risk`: extend them where
+the checks are trusted to catch a broken update.
+
+Commits pushed by [autofix.ci](https://autofix.ci) or by [nicebots-xyz/fixer](https://github.com/nicebots-xyz/fixer)
+(the NiceBots Autofixer app), e.g. reformatting after a formatter bump, are listed in `gitIgnoredAuthors`. Renovate
+still treats the branch as its own: it keeps updating it and can still automerge it. When Renovate rebases, it drops
+the fix commit and the fixer applies it again.
